@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -8,7 +9,9 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-navy-800">Smart Ledger</h1>
+              <Link to="/">
+                <h1 className="text-2xl font-bold text-navy-800">Smart Ledger</h1>
+              </Link>
             </div>
           </div>
           
@@ -30,9 +33,11 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-              Login
-            </Button>
+            <Link to="/login">
+              <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
+                Login
+              </Button>
+            </Link>
             <Button className="bg-teal-600 hover:bg-teal-700 text-white">
               Start Free Trial
             </Button>
