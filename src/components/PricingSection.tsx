@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const PricingSection = () => {
   const [billingCycle, setBillingCycle] = useState("monthly");
@@ -184,16 +185,18 @@ const PricingSection = () => {
                   ))}
                 </ul>
                 
-                <Button 
-                  className={`w-full mt-6 ${
-                    plan.popular 
-                    ? "bg-teal-600 hover:bg-teal-700 text-white" 
-                    : "border border-teal-600 text-teal-600 hover:bg-teal-50"
-                  }`}
-                  variant={plan.popular ? "default" : "outline"}
-                >
-                  Start Free Trial
-                </Button>
+                <Link to={`/checkout?plan=${plan.name}&cycle=${billingCycle}`}>
+                  <Button 
+                    className={`w-full mt-6 ${
+                      plan.popular 
+                      ? "bg-teal-600 hover:bg-teal-700 text-white" 
+                      : "border border-teal-600 text-teal-600 hover:bg-teal-50"
+                    }`}
+                    variant={plan.popular ? "default" : "outline"}
+                  >
+                    Start Free Trial
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
@@ -228,9 +231,11 @@ const PricingSection = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant="outline" size="sm" className="w-full mt-4 border-teal-600 text-teal-600 hover:bg-teal-50">
-                    Add to Plan
-                  </Button>
+                  <Link to={`/checkout?plan=Business&cycle=monthly&addon=${addon.name}`}>
+                    <Button variant="outline" size="sm" className="w-full mt-4 border-teal-600 text-teal-600 hover:bg-teal-50">
+                      Add to Plan
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
