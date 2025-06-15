@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,10 +102,12 @@ const DashboardMain = () => {
 };
 
 const Dashboard = () => (
-  <div className="min-h-screen bg-gray-50 flex">
-    <DashboardSidebar />
-    <DashboardMain />
-  </div>
+  <SidebarProvider>
+    <div className="min-h-screen bg-gray-50 flex w-full">
+      <DashboardSidebar />
+      <DashboardMain />
+    </div>
+  </SidebarProvider>
 );
 
 export default Dashboard;
