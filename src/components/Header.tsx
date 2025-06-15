@@ -38,9 +38,11 @@ const Header = () => {
                 Login
               </Button>
             </Link>
-            <Button className="bg-teal-600 hover:bg-teal-700 text-white">
-              Start Free Trial
-            </Button>
+            <Link to="/signup">
+              <Button className="bg-teal-600 hover:bg-teal-700 text-white">
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
