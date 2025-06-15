@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Banknote, BarChart, Boxes, ShoppingCart, Bell, Users, Link2 } from "lucide-react";
+import { Banknote, BarChart, Boxes, ShoppingCart, Bell, Users, Link2, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const mockData = {
@@ -36,6 +36,10 @@ const CardSection = ({ title, icon, value, extra }: { title: string; icon: React
 
 const DashboardMain = () => {
   const navigate = useNavigate();
+  const [expenseFilter, setExpenseFilter] = useState("Month");
+  
+  const expenseFilters = ["Today", "Week", "Month", "Quarterly", "Yearly"];
+
   return (
     <div className="flex-1 p-6 overflow-y-auto">
       <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -45,11 +49,37 @@ const DashboardMain = () => {
           Connect Website or Amazon
         </Button>
       </div>
+      
       {/* Dashboard cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <CardSection title="Bank Balance" icon={<Banknote className="w-6 h-6" />} value={"₹" + mockData.bankBalance.toLocaleString()} />
         <CardSection title="Profit/Loss" icon={<BarChart className="w-6 h-6" />} value={mockData.profitLoss} />
-        <CardSection title="Expenses (This Month)" icon={<Boxes className="w-6 h-6" />} value={mockData.expenses} />
+        <Card className="flex-1 min-w-[180px] flex flex-col">
+          <CardHeader className="flex flex-row items-center gap-2 pb-2">
+            <span className="bg-teal-100 text-teal-700 rounded-full p-2">
+              <Boxes className="w-6 h-6" />
+            </span>
+            <div className="flex-1 flex items-center justify-between">
+              <CardTitle className="text-base font-medium">Expenses</CardTitle>
+              <div className="relative">
+                <select 
+                  value={expenseFilter}
+                  onChange={(e) => setExpenseFilter(e.target.value)}
+                  className="appearance-none bg-gray-50 border border-gray-200 rounded-lg px-3 py-1 text-xs text-gray-600 cursor-pointer hover:bg-gray-100 transition-colors"
+                >
+                  {expenseFilters.map(filter => (
+                    <option key={filter} value={filter}>{filter}</option>
+                  ))}
+                </select>
+                <Filter className="w-3 h-3 absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col justify-between">
+            <div className="text-lg font-bold">{mockData.expenses}</div>
+            <div className="mt-2 text-xs text-gray-500">This {expenseFilter.toLowerCase()}</div>
+          </CardContent>
+        </Card>
         <CardSection title="Sales" icon={<ShoppingCart className="w-6 h-6" />} value={mockData.sales} />
       </div>
 
