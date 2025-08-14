@@ -7,13 +7,100 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
+      bank_balance: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      expenses: {
+        Row: {
+          amount: number
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          period: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          period?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          period?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          completed: number
+          created_at: string
+          id: string
+          pending: number
+          total_orders: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: number
+          created_at?: string
+          id?: string
+          pending?: number
+          total_orders?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: number
+          created_at?: string
+          id?: string
+          pending?: number
+          total_orders?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -39,6 +126,93 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profit_loss: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          period: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          period?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          period?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reminders: {
+        Row: {
+          completed: boolean
+          created_at: string
+          due_date: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          due_date: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          due_date?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          period: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          period?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          period?: string
           updated_at?: string
           user_id?: string
         }

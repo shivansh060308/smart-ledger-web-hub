@@ -4,22 +4,12 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Banknote, BarChart, Boxes, ShoppingCart, Bell, Users, Link2, Filter } from "lucide-react";
+import { Banknote, BarChart, Boxes, ShoppingCart, Bell, Users, Link2, Filter, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const mockData = {
-  bankBalance: 124563,
-  profitLoss: "+₹12,345",
-  expenses: "₹8,550",
-  sales: "₹54,200",
-  totalOrders: 128,
-  pendingOrders: 7,
-  completedOrders: 121,
-  reminders: [
-    { label: "GST Filing Due", date: "20 June, 2025" },
-    { label: "Renew Amazon Sync", date: "1 July, 2025" },
-  ]
-};
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { EditableCard } from "@/components/EditableCard";
+import { EditableOrdersCard } from "@/components/EditableOrdersCard";
+import { AddReminderForm } from "@/components/AddReminderForm";
 
 const CardSection = ({ title, icon, value, extra }: { title: string; icon: React.ReactNode; value: string|number; extra?: React.ReactNode }) => (
   <Card className="flex-1 min-w-[180px] flex flex-col">
@@ -36,9 +26,67 @@ const CardSection = ({ title, icon, value, extra }: { title: string; icon: React
 
 const DashboardMain = () => {
   const navigate = useNavigate();
-  const [expenseFilter, setExpenseFilter] = useState("Month");
+  const [expenseFilter, setExpenseFilter] = useState("month");
   
-  const expenseFilters = ["Today", "Week", "Month", "Quarterly", "Yearly"];
+  const {
+    bankBalance,
+    expenses,
+    sales,
+    orders,
+    reminders,
+    profitLoss,
+    loading,
+    updateBankBalance,
+    addExpense,
+    addSale,
+    updateOrders,
+    addReminder,
+    updateProfitLoss,
+  } = useDashboardData();
+
+  const expenseFilters = ["today", "week", "month", "quarterly", "yearly"];
+
+  // Calculate filtered expense amount
+  const getFilteredExpenseAmount = () => {
+    const filteredExpenses = expenses.filter(expense => expense.period === expenseFilter);
+    return filteredExpenses.reduce((total, expense) => total + Number(expense.amount), 0);
+  };
+
+  // Calculate filtered sales amount
+  const getFilteredSalesAmount = () => {
+    const filteredSales = sales.filter(sale => sale.period === expenseFilter);
+    return filteredSales.reduce((total, sale) => total + Number(sale.amount), 0);
+  };
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return `₹${amount.toLocaleString()}`;
+  };
+
+  const handleAddExpense = async (amount: number) => {
+    await addExpense({
+      amount,
+      period: expenseFilter,
+      category: 'General',
+      description: `${expenseFilter} expense`
+    });
+  };
+
+  const handleAddSale = async (amount: number) => {
+    await addSale({
+      amount,
+      period: expenseFilter,
+      description: `${expenseFilter} sale`
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-6 overflow-y-auto">
@@ -52,9 +100,21 @@ const DashboardMain = () => {
       
       {/* Dashboard cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <CardSection title="Bank Balance" icon={<Banknote className="w-6 h-6" />} value={"₹" + mockData.bankBalance.toLocaleString()} />
-        <CardSection title="Profit/Loss" icon={<BarChart className="w-6 h-6" />} value={mockData.profitLoss} />
-        <Card className="flex-1 min-w-[180px] flex flex-col">
+        <EditableCard
+          title="Bank Balance"
+          icon={<Banknote className="w-6 h-6" />}
+          value={formatCurrency(bankBalance?.amount || 0)}
+          onSave={updateBankBalance}
+        />
+        
+        <EditableCard
+          title="Profit/Loss"
+          icon={<BarChart className="w-6 h-6" />}
+          value={formatCurrency(profitLoss?.amount || 0)}
+          onSave={updateProfitLoss}
+        />
+        
+        <Card className="flex-1 min-w-[180px] flex flex-col hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center gap-2 pb-2">
             <span className="bg-teal-100 text-teal-700 rounded-full p-2">
               <Boxes className="w-6 h-6" />
@@ -68,7 +128,9 @@ const DashboardMain = () => {
                   className="appearance-none bg-gray-50 border border-gray-200 rounded-lg px-3 py-1 text-xs text-gray-600 cursor-pointer hover:bg-gray-100 transition-colors"
                 >
                   {expenseFilters.map(filter => (
-                    <option key={filter} value={filter}>{filter}</option>
+                    <option key={filter} value={filter}>
+                      {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    </option>
                   ))}
                 </select>
                 <Filter className="w-3 h-3 absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -76,49 +138,78 @@ const DashboardMain = () => {
             </div>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col justify-between">
-            <div className="text-lg font-bold">{mockData.expenses}</div>
-            <div className="mt-2 text-xs text-gray-500">This {expenseFilter.toLowerCase()}</div>
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-bold">{formatCurrency(getFilteredExpenseAmount())}</div>
+              <Button 
+                onClick={() => handleAddExpense(0)}
+                size="sm"
+                variant="outline"
+                className="text-xs px-2 py-1 h-auto"
+              >
+                + Add
+              </Button>
+            </div>
+            <div className="mt-2 text-xs text-gray-500">This {expenseFilter}</div>
           </CardContent>
         </Card>
-        <CardSection title="Sales" icon={<ShoppingCart className="w-6 h-6" />} value={mockData.sales} />
+        
+        <Card className="flex-1 min-w-[180px] flex flex-col hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center gap-2 pb-2">
+            <span className="bg-teal-100 text-teal-700 rounded-full p-2">
+              <ShoppingCart className="w-6 h-6" />
+            </span>
+            <CardTitle className="text-base font-medium">Sales</CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-bold">{formatCurrency(getFilteredSalesAmount())}</div>
+              <Button 
+                onClick={() => handleAddSale(0)}
+                size="sm"
+                variant="outline"
+                className="text-xs px-2 py-1 h-auto"
+              >
+                + Add
+              </Button>
+            </div>
+            <div className="mt-2 text-xs text-gray-500">This {expenseFilter}</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Order status & reminders */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Orders Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-8 text-base">
-              <div>
-                <div className="font-semibold text-navy-700">{mockData.totalOrders}</div>
-                <div className="text-xs text-gray-600">Total Orders</div>
-              </div>
-              <div>
-                <div className="font-semibold text-orange-600">{mockData.pendingOrders}</div>
-                <div className="text-xs text-gray-600">Pending</div>
-              </div>
-              <div>
-                <div className="font-semibold text-green-600">{mockData.completedOrders}</div>
-                <div className="text-xs text-gray-600">Completed</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
+        <EditableOrdersCard
+          totalOrders={orders?.total_orders || 0}
+          pendingOrders={orders?.pending || 0}
+          completedOrders={orders?.completed || 0}
+          onSave={updateOrders}
+        />
+        
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle><Bell className="w-5 h-5 mr-2 inline" />Reminders</CardTitle>
+            <AddReminderForm onAdd={addReminder} />
           </CardHeader>
           <CardContent>
-            <ul>
-              {mockData.reminders.map((r, i) => (
-                <li className="mb-2 flex items-center gap-2" key={i}>
-                  <span className="bg-yellow-100 px-2 py-1 rounded text-xs text-yellow-700">{r.label}</span>
-                  <span className="text-xs text-gray-500">{r.date}</span>
-                </li>
-              ))}
-            </ul>
+            {reminders.length === 0 ? (
+              <div className="text-gray-500 text-sm text-center py-4">
+                No pending reminders. Add one to get started!
+              </div>
+            ) : (
+              <ul className="space-y-2">
+                {reminders.map((reminder) => (
+                  <li className="flex items-center gap-2" key={reminder.id}>
+                    <span className="bg-yellow-100 px-2 py-1 rounded text-xs text-yellow-700 flex-1">
+                      {reminder.title}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(reminder.due_date).toLocaleDateString()}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </CardContent>
         </Card>
       </div>
