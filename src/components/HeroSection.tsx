@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -16,12 +17,16 @@ const HeroSection = () => {
               Manage income, expenses, growth & customers in one place – no accountant needed.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 text-lg">
-                Start Free Trial
-              </Button>
-              <Button size="lg" variant="outline" className="border-navy-600 text-navy-600 hover:bg-navy-50 px-8 py-4 text-lg">
-                See How It Works
-              </Button>
+              <Link to="/signup">
+                <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 text-lg w-full sm:w-auto">
+                  Start Free Trial
+                </Button>
+              </Link>
+              <a href="#features">
+                <Button size="lg" variant="outline" className="border-navy-600 text-navy-600 hover:bg-navy-50 px-8 py-4 text-lg w-full sm:w-auto">
+                  See How It Works
+                </Button>
+              </a>
             </div>
             <div className="flex items-center text-sm text-gray-500">
               <span>✓ 14-day free trial</span>

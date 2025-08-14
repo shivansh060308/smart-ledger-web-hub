@@ -1,5 +1,6 @@
 
 import { Mail, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -28,7 +29,7 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-300 hover:text-teal-400 transition-colors">Home</a></li>
+              <li><Link to="/" className="text-gray-300 hover:text-teal-400 transition-colors">Home</Link></li>
               <li><a href="#features" className="text-gray-300 hover:text-teal-400 transition-colors">Features</a></li>
               <li><a href="#pricing" className="text-gray-300 hover:text-teal-400 transition-colors">Pricing</a></li>
               <li><a href="#comparison" className="text-gray-300 hover:text-teal-400 transition-colors">Compare</a></li>
@@ -61,9 +62,9 @@ const Footer = () => {
             © 2024 Smart Ledger. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Privacy Policy</a>
-            <a href="#" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Terms of Service</a>
-            <a href="#" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Cookie Policy</a>
+            <Link to="/privacy" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Terms of Service</Link>
+            <Link to="/cookies" className="text-gray-400 hover:text-teal-400 text-sm transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>
