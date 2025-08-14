@@ -4,8 +4,18 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Boxes, Package, AlertTriangle, TrendingDown } from "lucide-react";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { EditableCard } from "@/components/EditableCard";
+import { AuthGuard } from "@/components/AuthGuard";
 
 const InventoryMain = () => {
+  const { sales, expenses, loading } = useDashboardData();
+
+  // Calculate inventory metrics based on sales and expenses
+  const totalSales = sales.reduce((sum, sale) => sum + Number(sale.amount), 0);
+  const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+  const estimatedInventoryValue = totalExpenses * 1.3; // Rough estimate
+
   return (
     <div className="flex-1 p-6 overflow-y-auto">
       <div className="mb-6">
@@ -17,42 +27,42 @@ const InventoryMain = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,543</div>
-            <p className="text-xs text-muted-foreground">Active products</p>
+            <div className="text-2xl font-bold">{sales.length}</div>
+            <p className="text-xs text-muted-foreground">Total transactions</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
+            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">23</div>
-            <p className="text-xs text-muted-foreground">Items need restock</p>
+            <div className="text-2xl font-bold text-green-600">₹{totalSales.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Total sales value</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <CardTitle className="text-sm font-medium">Expenses</CardTitle>
             <TrendingDown className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">5</div>
-            <p className="text-xs text-muted-foreground">Items unavailable</p>
+            <div className="text-2xl font-bold text-red-600">₹{totalExpenses.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Total expenses</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+            <CardTitle className="text-sm font-medium">Est. Inventory</CardTitle>
             <Boxes className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹8,45,231</div>
-            <p className="text-xs text-muted-foreground">Inventory worth</p>
+            <div className="text-2xl font-bold">₹{estimatedInventoryValue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Estimated value</p>
           </CardContent>
         </Card>
       </div>
@@ -97,12 +107,14 @@ const InventoryMain = () => {
 };
 
 const Inventory = () => (
-  <SidebarProvider>
-    <div className="min-h-screen bg-gray-50 flex w-full">
-      <DashboardSidebar />
-      <InventoryMain />
-    </div>
-  </SidebarProvider>
+  <AuthGuard>
+    <SidebarProvider>
+      <div className="min-h-screen bg-gray-50 flex w-full">
+        <DashboardSidebar />
+        <InventoryMain />
+      </div>
+    </SidebarProvider>
+  </AuthGuard>
 );
 
 export default Inventory;
