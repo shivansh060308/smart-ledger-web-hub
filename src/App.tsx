@@ -18,6 +18,7 @@ import Offers from "./pages/Offers";
 import Orders from "./pages/Orders";
 import Transactions from "./pages/Transactions";
 import Profile from "./pages/Profile";
+import AmazonCallback from "./pages/AmazonCallback";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/dashboard/orders" element={<AuthGuard><Orders /></AuthGuard>} />
             <Route path="/dashboard/transactions" element={<AuthGuard><Transactions /></AuthGuard>} />
             <Route path="/dashboard/profile" element={<AuthGuard><Profile /></AuthGuard>} />
+            <Route path="/auth/amazon/callback" element={<AmazonCallback />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
