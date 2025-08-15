@@ -14,6 +14,240 @@ export type Database = {
   }
   public: {
     Tables: {
+      amazon_accounts: {
+        Row: {
+          access_token: string | null
+          access_token_expires_at: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          marketplace_ids: string[]
+          refresh_token: string
+          region: string
+          seller_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          access_token_expires_at?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          marketplace_ids?: string[]
+          refresh_token: string
+          region?: string
+          seller_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          access_token_expires_at?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          marketplace_ids?: string[]
+          refresh_token?: string
+          region?: string
+          seller_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      amazon_orders: {
+        Row: {
+          amazon_account_id: string
+          amazon_order_id: string
+          buyer_email: string | null
+          created_at: string
+          earliest_ship_date: string | null
+          fulfillment_channel: string | null
+          id: string
+          last_update_date: string | null
+          latest_ship_date: string | null
+          marketplace_id: string
+          number_of_items_shipped: number | null
+          number_of_items_unshipped: number | null
+          order_status: string
+          order_total_amount: number | null
+          order_total_currency: string | null
+          order_type: string | null
+          purchase_date: string
+          ship_service_level: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amazon_account_id: string
+          amazon_order_id: string
+          buyer_email?: string | null
+          created_at?: string
+          earliest_ship_date?: string | null
+          fulfillment_channel?: string | null
+          id?: string
+          last_update_date?: string | null
+          latest_ship_date?: string | null
+          marketplace_id: string
+          number_of_items_shipped?: number | null
+          number_of_items_unshipped?: number | null
+          order_status: string
+          order_total_amount?: number | null
+          order_total_currency?: string | null
+          order_type?: string | null
+          purchase_date: string
+          ship_service_level?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amazon_account_id?: string
+          amazon_order_id?: string
+          buyer_email?: string | null
+          created_at?: string
+          earliest_ship_date?: string | null
+          fulfillment_channel?: string | null
+          id?: string
+          last_update_date?: string | null
+          latest_ship_date?: string | null
+          marketplace_id?: string
+          number_of_items_shipped?: number | null
+          number_of_items_unshipped?: number | null
+          order_status?: string
+          order_total_amount?: number | null
+          order_total_currency?: string | null
+          order_type?: string | null
+          purchase_date?: string
+          ship_service_level?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amazon_orders_amazon_account_id_fkey"
+            columns: ["amazon_account_id"]
+            isOneToOne: false
+            referencedRelation: "amazon_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      amazon_products: {
+        Row: {
+          amazon_account_id: string
+          asin: string
+          brand: string | null
+          category: string | null
+          created_at: string
+          currency: string | null
+          id: string
+          inventory_quantity: number | null
+          is_active: boolean
+          marketplace_id: string
+          price: number | null
+          sku: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amazon_account_id: string
+          asin: string
+          brand?: string | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          inventory_quantity?: number | null
+          is_active?: boolean
+          marketplace_id: string
+          price?: number | null
+          sku?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amazon_account_id?: string
+          asin?: string
+          brand?: string | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          inventory_quantity?: number | null
+          is_active?: boolean
+          marketplace_id?: string
+          price?: number | null
+          sku?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amazon_products_amazon_account_id_fkey"
+            columns: ["amazon_account_id"]
+            isOneToOne: false
+            referencedRelation: "amazon_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      amazon_settlements: {
+        Row: {
+          amazon_account_id: string
+          created_at: string
+          currency: string | null
+          deposit_date: string | null
+          id: string
+          marketplace_id: string | null
+          settlement_end_date: string | null
+          settlement_id: string
+          settlement_start_date: string | null
+          total_amount: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amazon_account_id: string
+          created_at?: string
+          currency?: string | null
+          deposit_date?: string | null
+          id?: string
+          marketplace_id?: string | null
+          settlement_end_date?: string | null
+          settlement_id: string
+          settlement_start_date?: string | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amazon_account_id?: string
+          created_at?: string
+          currency?: string | null
+          deposit_date?: string | null
+          id?: string
+          marketplace_id?: string | null
+          settlement_end_date?: string | null
+          settlement_id?: string
+          settlement_start_date?: string | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amazon_settlements_amazon_account_id_fkey"
+            columns: ["amazon_account_id"]
+            isOneToOne: false
+            referencedRelation: "amazon_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bank_balance: {
         Row: {
           amount: number
